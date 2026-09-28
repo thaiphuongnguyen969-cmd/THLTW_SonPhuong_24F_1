@@ -3,26 +3,30 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
-use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Resources\CategoryResource;
-use Illuminate\Http\Request;
+use App\Models\Category;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CategoryController extends Controller
 {
-    // 1. Lấy danh sách danh mục
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
-        $categories = Category::all();
+        $categories = Category::active()
+            ->whereNull('parent_id')
+            ->with(['children' => fn ($query) => $query->active()->orderBy('sort_order')])
+            ->orderBy('sort_order')
+            ->get();
+
         return CategoryResource::collection($categories);
     }
 
-    // 2. Thêm mới danh mục
-    public function store(StoreCategoryRequest $request)
+    public function show(string $slug): CategoryResource
     {
-        $category = Category::create($request->validated());
+        $category = Category::active()
+            ->with(['children' => fn ($query) => $query->active()->orderBy('sort_order')])
+            ->where('slug', $slug)
+            ->firstOrFail();
+
         return new CategoryResource($category);
     }
-
-    // Các hàm show, update, destroy tương tự...
 }
