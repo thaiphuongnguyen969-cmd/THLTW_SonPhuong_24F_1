@@ -10,16 +10,14 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('categories', function (Blueprint $table) {
-    $table->id('category_id');
-    $table->string('category_name');
-    $table->string('slug')->unique();
-    $table->unsignedBigInteger('parent_id')->nullable();
-    $table->foreign('parent_id')->references('category_id')->on('categories')->onDelete('cascade');
-    $table->timestamps();
-});
-    }
+{
+    Schema::create('categories', function (Blueprint $table) {
+        $table->id(); // id INT, PK, AUTO_INCREMENT
+        $table->string('name', 100); // Tên danh mục
+        $table->text('description')->nullable(); // Mô tả
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.

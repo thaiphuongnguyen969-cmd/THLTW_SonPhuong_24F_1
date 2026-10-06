@@ -9,12 +9,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('brands', function (Blueprint $table) {
-            $table->id('brand_id');
-            $table->string('name');
-            $table->string('slug')->unique();
-            $table->string('image')->nullable();
-            $table->unsignedInteger('sort_order')->default(0);
-            $table->boolean('status')->default(true);
+            $table->id();
+            $table->string('name', 100)->unique();
+            $table->text('description')->nullable();
+            $table->string('logo')->nullable();
             $table->timestamps();
         });
     }

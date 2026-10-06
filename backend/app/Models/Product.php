@@ -1,37 +1,39 @@
 <?php
 
 namespace App\Models;
+use App\Models\Brand;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Product extends Model
 {
-    protected $primaryKey = 'product_id';
+    use HasFactory;
 
     protected $fillable = [
         'category_id',
         'brand_id',
-        'product_name',
-        'slug',
-        'base_price',
+        'name',
         'description',
-        'status',
+        'price',
+        'image',
+        'quantity',
     ];
 
-    public function scopeActive(Builder $query): Builder
+    // Thiết lập quan hệ: Một sản phẩm thuộc về một danh mục
+    public function category()
     {
-        return $query->where('status', 1);
+        return $this->belongsTo(Category::class);
     }
 
-    public function category(): BelongsTo
+    // Trỏ route key sang cột 'name' để có thể tìm kiếm sản phẩm bằng tên trên URL
+    public function getRouteKeyName()
     {
-        return $this->belongsTo(Category::class, 'category_id', 'category_id');
+        return 'name';
     }
 
-    public function brand(): BelongsTo
-    {
-        return $this->belongsTo(Brand::class, 'brand_id', 'brand_id');
-    }
+    public function brand()
+{
+    return $this->belongsTo(Brand::class);
+}
 }

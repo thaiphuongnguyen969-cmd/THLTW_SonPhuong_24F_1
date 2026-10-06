@@ -2,34 +2,24 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    protected $table = 'categories';
+    use HasFactory;
 
-    protected $primaryKey = 'category_id';
+    // Cho phép thêm/sửa các trường này
+    protected $fillable = ['name', 'description'];
 
-    protected $fillable = ['category_name', 'slug', 'parent_id', 'status', 'sort_order'];
-
-    public function scopeActive($query)
-    {
-        return $query->where('status', 1);
-    }
-
-    // Quan hệ
     public function products()
     {
-        return $this->hasMany(Product::class, 'category_id', 'category_id');
-    }
+        return $this->hasMany(Product::class);
+    } // Đóng hàm products() ở đây
 
-    public function children()
+    // Trỏ route key sang cột 'name'
+    public function getRouteKeyName()
     {
-        return $this->hasMany(Category::class, 'parent_id', 'category_id');
-    }
-
-    public function parent()
-    {
-        return $this->belongsTo(Category::class, 'parent_id', 'category_id');
+        return 'name';
     }
 }

@@ -2,19 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Brand extends Model
 {
-    protected $table = 'brands';
+    use HasFactory;
 
-    protected $primaryKey = 'brand_id';
+    protected $fillable = ['name']; // Hoặc các trường khác của bạn
 
-    protected $fillable = ['name', 'slug', 'image', 'sort_order', 'status'];
-
-    public function scopeActive(Builder $query): Builder
+    /**
+     * Lấy tên cột dùng để định danh route model binding.
+     */
+    public function getRouteKeyName()
     {
-        return $query->where('status', 1);
+        return 'name'; // Thay 'id' bằng 'name' hoặc cột slug tùy ý
     }
 }

@@ -9,16 +9,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->foreignId('brand_id')->nullable()->constrained('brands', 'brand_id')->nullOnDelete();
-            $table->boolean('status')->default(true);
+            $table->foreignId('brand_id')
+                ->nullable()
+                ->after('category_id')
+                ->constrained('brands')
+                ->nullOnDelete()
+                ->cascadeOnUpdate();
         });
     }
 
     public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('brand_id');
-            $table->dropColumn('status');
+            $table->dropForeign(['brand_id']);
+            $table->dropColumn('brand_id');
         });
     }
 };
